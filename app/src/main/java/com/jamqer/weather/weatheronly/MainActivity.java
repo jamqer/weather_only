@@ -1,10 +1,9 @@
 package com.jamqer.weather.weatheronly;
 
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.app.AppCompatActivity;
@@ -26,7 +25,7 @@ import retrofit.Retrofit;
 @SuppressWarnings("deprecated")
 public class MainActivity extends AppCompatActivity {
 
-    /*Global declaration of components*/
+    /*Global declarations*/
     public static final String BASE_URL = "http://api.openweathermap.org/data/2.5/" ; /*Base URL to API*/
 
     Button Btn_search;
@@ -61,14 +60,31 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setIcon(R.drawable.toolbar);
         getSupportActionBar().setTitle("  Is it Sunny?");
 
+        fetchWeather();
+    }
+
+    private void MoveInfoDown(){ /*Simple animation for info*/
+
+        ObjectAnimator WeatherInfoAnim = ObjectAnimator.ofFloat(Info_Layout, "Y", 90);
+        WeatherInfoAnim.setDuration(2200);
+        WeatherInfoAnim.setInterpolator(new FastOutSlowInInterpolator());
+        WeatherInfoAnim.start();
+    }
+
+    private void HideSoftKeyboard(Activity activity){
+
+        InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(Move_Layout.getWindowToken(), 0);
+    }
+
+    private void fetchWeather() {
+
     /*Setting listener on search button*/
         Btn_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                /*Hide softkey keyboard on button click*/
-                InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(Move_Layout.getWindowToken(), 0);
+                HideSoftKeyboard(MainActivity.this);
 
                 /*Building retrofit **2.0** adapter*/
                 Retrofit retrofit = new Retrofit.Builder()
@@ -80,32 +96,33 @@ public class MainActivity extends AppCompatActivity {
                 final API_weather api_weather = retrofit.create(API_weather.class);
 
                         /*Get value to query from editview*/
-                        name_city = Edt_txt.getText().toString();
+                name_city = Edt_txt.getText().toString();
+
                 /*Call API, start doing *magic things* in ASYNCTASK method */
                 Call<ResponseData> call = api_weather.getWeather(name_city);
                 call.enqueue(new Callback<ResponseData>() {
 
-                    @Override /*What would happend if server will respone? LOOK AT THIS SHEAAT*/
+                    @Override
                     public void onResponse(Response<ResponseData> response) {
 
-                       try {
-                           double dou_temp = Double.parseDouble(response.body().getMain().getTemp());
+                        try {
+                            double dou_temp = Double.parseDouble(response.body().getMain().getTemp());
 
-                           tv_ShowTemp.setText("" + Math.round(dou_temp - 273.15));
-                           tv_C.setText(" " + "\u00b0" + "C");
-                           tv_showWeather.setText("" + response.body().getCityName() + "\n"
-                                   + "Pressure: " + response.body().getMain().getPressure() + " hPa" + "\n"
-                                   + "Humidity: " + response.body().getMain().getHumidity() + " %" + "\n"
-                                   + "Wind speed: " + response.body().getWind().getSpeed() + " m/s" + "\n"
-                                   + "Clouds: " + response.body().getClouds().getAll() + " % of the sky");
-
-
+                            tv_ShowTemp.setText("" + Math.round(dou_temp - 273.15));
+                            tv_C.setText(" " + "\u00b0" + "C");
+                            tv_showWeather.setText("" + response.body().getCityName() + "\n"
+                                    + "Pressure: " + response.body().getMain().getPressure() + " hPa" + "\n"
+                                    + "Humidity: " + response.body().getMain().getHumidity() + " %" + "\n"
+                                    + "Wind speed: " + response.body().getWind().getSpeed() + " m/s" + "\n"
+                                    + "Clouds: " + response.body().getClouds().getAll() + " % of the sky");
 
 
-                       }catch(NullPointerException e){
-                           tv_showWeather.setText("We didn't find city name: " + name_city + "\n"
-                                   + "Check your internet connection");
-                       }
+
+
+                        }catch(NullPointerException e){
+                            tv_showWeather.setText("We didn't find city name: " + name_city + "\n"
+                                    + "Check your internet connection");
+                        }
                     }
 
                     @Override /*Call failure LOG*/
@@ -114,21 +131,10 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }); // End of Call<ResponseData>
 
-                    MoveInfoDown(); /*Animation of moving "Info_Layout"*/
-
-
+                MoveInfoDown(); /*Animation of moving "Info_Layout"*/
 
             } // End of OnClick method
         }); // End of OnClickListner
+
     }
-
-    public void MoveInfoDown(){ /*Simple animation for info*/
-
-        ObjectAnimator WeatherInfoAnim = ObjectAnimator.ofFloat(Info_Layout, "Y", 90);
-        WeatherInfoAnim.setDuration(2200);
-        WeatherInfoAnim.setInterpolator(new FastOutSlowInInterpolator());
-        WeatherInfoAnim.start();
-    }
-
-
 }

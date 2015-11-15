@@ -13,44 +13,44 @@
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id = "@+id/infoLay"
         android:layout_width="match_parent"
-        android:layout_height="320dp"
-        android:layout_marginTop="-400dp"
+        android:layout_height="@dimen/dp320margin"
+        android:layout_marginTop="@dimen/dpMinus400margin"
         android:paddingLeft="@dimen/activity_low_horizontal_margin"
         android:paddingRight="@dimen/activity_low_horizontal_margin"
         android:paddingTop="@dimen/activity_low_vertical_margin"
         android:paddingBottom="@dimen/activity_low_vertical_margin"
-        android:id = "@+id/infoLay"
         tools:context = ".MainActivity">
 
         <TextView
+            android:id="@+id/tV_temp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:textSize="130sp"
+            android:textSize="@dimen/sp130textSize"
             android:text=""
-            android:id="@+id/tV_temp"
             android:textColor="@color/colorAccent"
-            android:layout_marginTop="5dp"/>
+            android:layout_marginTop="@dimen/dp5margin"/>
         <TextView
+            android:id="@+id/tV_c"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:textSize="@dimen/sp20textSize"
             android:text=""
-            android:id="@+id/tV_c"
             android:textColor="@android:color/holo_red_dark"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="@dimen/dp15margin"
             android:layout_toRightOf="@+id/tV_temp" />
 
         <TextView
+            android:id="@+id/tV_city"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:textSize="@dimen/sp14textSize"
             android:text=""
-            android:id="@+id/tV_city"
             android:layout_below="@id/tV_temp"
             android:textColor="@color/colorAccent"
-            android:layout_marginTop="5dp"/>
+            android:layout_marginTop="@dimen/dp5margin"/>
 
 
         </RelativeLayout>
